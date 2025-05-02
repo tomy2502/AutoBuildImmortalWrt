@@ -2,7 +2,8 @@
 # 99-custom.sh 就是immortalwrt固件首次启动时运行的脚本 位于固件内的/etc/uci-defaults/99-custom.sh
 # Log file for debugging
 LOGFILE="/tmp/uci-defaults-log.txt"
-echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
+echo "[tomy] Starting 99-custom.sh at $(date)" >> $LOGFILE
+echo "[tomy] Starting 99-custom.sh at $(date)"
 
 # 设置默认防火墙规则，方便虚拟机首次访问 WebUI
 # uci set firewall.@zone[1].input='ACCEPT'
@@ -57,11 +58,13 @@ elif [ "$count" -gt 1 ]; then
    # LAN口设置静态IP
    uci set network.lan.proto='static'
    # 多网口设备 支持修改为别的ip地址
-   uci set network.lan.ipaddr='192.168.100.1'
+   uci set network.lan.ipaddr='192.168.199.1'
    uci set network.lan.netmask='255.255.255.0'
-   echo "set 192.168.100.1 at $(date)" >> $LOGFILE
+   echo "[tomy] set 192.168.199.1 at $(date)" >> $LOGFILE
+   echo "[tomy] set 192.168.199.1 at $(date)"
    # 判断是否启用 PPPoE
-   echo "print enable_pppoe value=== $enable_pppoe" >> $LOGFILE
+   echo "[tomy] print enable_pppoe value=== $enable_pppoe" >> $LOGFILE
+   echo "[tomy] print enable_pppoe value=== $enable_pppoe"
    if [ "$enable_pppoe" = "yes" ]; then
       echo "PPPoE is enabled at $(date)" >> $LOGFILE
       # 设置ipv4宽带拨号信息
@@ -72,12 +75,16 @@ elif [ "$count" -gt 1 ]; then
       uci set network.wan.auto='1'
       # 设置ipv6 默认不配置协议
       uci set network.wan6.proto='none'
-      echo "PPPoE configuration completed successfully." >> $LOGFILE
+      echo "[tomy] PPPoE configuration completed successfully." >> $LOGFILE
+      echo "[tomy] PPPoE configuration completed successfully."
    else
-      echo "PPPoE is not enabled. Skipping configuration." >> $LOGFILE
+      echo "[tomy] PPPoE is not enabled. Skipping configuration." >> $LOGFILE
+      echo "[tomy] PPPoE is not enabled. Skipping configuration."
    fi
 fi
 
+echo "[tomy] Set DHCP host. at $(date)" >> $LOGFILE
+echo "[tomy] Set DHCP host. at $(date)"
 # 添加静态 DHCP 配置
 uci add dhcp host
 uci set dhcp.@host[-1].name='ketingBOX'
@@ -119,6 +126,9 @@ uci set dhcp.@host[-1].name='XBOXONE'
 uci set dhcp.@host[-1].mac='1C:1A:DF:35:65:7F'
 uci set dhcp.@host[-1].ip='192.168.199.196'
 
+echo "[tomy] Set FireWall redirect. at $(date)" >> $LOGFILE
+echo "[tomy] Set FireWall redirect. at $(date)"
+# 防火墙端口转发
 uci add firewall redirect
 uci set firewall.@redirect[-1].name='8378'
 uci set firewall.@redirect[-1].src='wan'
@@ -268,7 +278,8 @@ uci set firewall.@redirect[-1].target='DNAT'
 # 检查配置文件pppoe-settings是否存在 该文件由build.sh动态生成
 SETTINGS_FILE="/etc/config/pppoe-settings"
 if [ ! -f "$SETTINGS_FILE" ]; then
-    echo "PPPoE settings file not found. Skipping." >> $LOGFILE
+    echo "[tomy] PPPoE settings file not found. Skipping." >> $LOGFILE
+    echo "[tomy] PPPoE settings file not found. Skipping."
 else
    # 读取pppoe信息($enable_pppoe、$pppoe_account、$pppoe_password)
    . "$SETTINGS_FILE"
