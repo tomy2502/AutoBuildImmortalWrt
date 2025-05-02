@@ -3,22 +3,9 @@
 # Log file for debugging
 LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
+
 # 设置默认防火墙规则，方便虚拟机首次访问 WebUI
-uci set firewall.@zone[1].input='ACCEPT'
-
-# 设置主机名映射，解决安卓原生 TV 无法联网的问题
-uci add dhcp domain
-uci set "dhcp.@domain[-1].name=time.android.com"
-uci set "dhcp.@domain[-1].ip=203.107.6.88"
-
-# 检查配置文件pppoe-settings是否存在 该文件由build.sh动态生成
-SETTINGS_FILE="/etc/config/pppoe-settings"
-if [ ! -f "$SETTINGS_FILE" ]; then
-    echo "PPPoE settings file not found. Skipping." >> $LOGFILE
-else
-   # 读取pppoe信息($enable_pppoe、$pppoe_account、$pppoe_password)
-   . "$SETTINGS_FILE"
-fi
+# uci set firewall.@zone[1].input='ACCEPT'
 
 # 计算网卡数量
 count=0
@@ -91,17 +78,214 @@ elif [ "$count" -gt 1 ]; then
    fi
 fi
 
+# 添加静态 DHCP 配置
+uci add dhcp host
+uci set dhcp.@host[-1].name='ketingBOX'
+uci set dhcp.@host[-1].mac='00:66:DE:0E:82:69'
+uci set dhcp.@host[-1].ip='192.168.199.169'
+
+uci add dhcp host
+uci set dhcp.@host[-1].name='TOMY'
+uci set dhcp.@host[-1].mac='90:09:D0:65:8D:07'
+uci set dhcp.@host[-1].ip='192.168.199.223'
+
+uci add dhcp host
+uci set dhcp.@host[-1].name='huaweiP30'
+uci set dhcp.@host[-1].mac='4E:E9:44:A2:7A:D0'
+uci set dhcp.@host[-1].ip='192.168.199.157'
+
+uci add dhcp host
+uci set dhcp.@host[-1].name='Z7S'
+uci set dhcp.@host[-1].mac='14:C0:50:05:F7:6B'
+uci set dhcp.@host[-1].ip='192.168.199.131'
+
+uci add dhcp host
+uci set dhcp.@host[-1].name='lilliantekiiPad'
+uci set dhcp.@host[-1].mac='46:B5:CA:6C:72:2F'
+uci set dhcp.@host[-1].ip='192.168.199.114'
+
+uci add dhcp host
+uci set dhcp.@host[-1].name='jimmyPC'
+uci set dhcp.@host[-1].mac='D4:6D:6D:31:19:6F'
+uci set dhcp.@host[-1].ip='192.168.199.214'
+
+uci add dhcp host
+uci set dhcp.@host[-1].name='jimmyMOBILE'
+uci set dhcp.@host[-1].mac='92:D6:47:F9:22:CF'
+uci set dhcp.@host[-1].ip='192.168.199.147'
+
+uci add dhcp host
+uci set dhcp.@host[-1].name='XBOXONE'
+uci set dhcp.@host[-1].mac='1C:1A:DF:35:65:7F'
+uci set dhcp.@host[-1].ip='192.168.199.196'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='8378'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='8378'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.1'
+uci set firewall.@redirect[-1].dest_port='80'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='ssh'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='30202'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.1'
+uci set firewall.@redirect[-1].dest_port='22'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='myfrp-1'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='7000'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.1'
+uci set firewall.@redirect[-1].dest_port='7000'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='myfrp-2'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='7501'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.1'
+uci set firewall.@redirect[-1].dest_port='7501'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='driver1'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='5000'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='5000'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='driver12'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='6690'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='6690'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='aria2-1'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='6800'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='6800'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='aria2-2'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='6880'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='6880'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='memos'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='5230'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='5230'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='purpur'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='25565'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='25565'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='purpur-voicechat'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='24454'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='24454'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='ssh223'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='22222'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='22222'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='astroBOT'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='6185'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='6185'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+uci add firewall redirect
+uci set firewall.@redirect[-1].name='cloudsaver'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='8008'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='192.168.199.223'
+uci set firewall.@redirect[-1].dest_port='8008'
+uci set firewall.@redirect[-1].proto='tcp'
+uci set firewall.@redirect[-1].target='DNAT'
+
+# 不用做盒子tv，不设置该域名映射
+# 设置主机名映射，解决安卓原生 TV 无法联网的问题
+# uci add dhcp domain
+# uci set "dhcp.@domain[-1].name=time.android.com"
+# uci set "dhcp.@domain[-1].ip=203.107.6.88"
+
+# 检查配置文件pppoe-settings是否存在 该文件由build.sh动态生成
+SETTINGS_FILE="/etc/config/pppoe-settings"
+if [ ! -f "$SETTINGS_FILE" ]; then
+    echo "PPPoE settings file not found. Skipping." >> $LOGFILE
+else
+   # 读取pppoe信息($enable_pppoe、$pppoe_account、$pppoe_password)
+   . "$SETTINGS_FILE"
+fi
 
 # 设置所有网口可访问网页终端
 uci delete ttyd.@ttyd[0].interface
 
 # 设置所有网口可连接 SSH
 uci set dropbear.@dropbear[0].Interface=''
+
+# 提交上述设置内容
 uci commit
 
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
-NEW_DESCRIPTION="Compiled by wukongdaily"
+NEW_DESCRIPTION="Compiled by Tomy"
 sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
 
 exit 0
